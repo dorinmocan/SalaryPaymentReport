@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class InputParser<T> : IInputParsable<Tuple<List<Employee>, List<SalaryTransaction>>>
+    class InputParser<T> : IInputParsable<ParsedData>
     {
         private readonly string _input;
         private readonly ILogger _logger;
@@ -18,15 +18,11 @@ namespace SalaryPaymentReport
             _logger = logger;
         }
 
-        public Tuple<List<Employee>, List<SalaryTransaction>> Parse()
+        public ParsedData Parse()
         {
             var employees = new Dictionary<uint, string>();
 
-            var result = new Tuple<List<Employee>, List<SalaryTransaction>>
-            (
-                new List<Employee>(),
-                new List<SalaryTransaction>()
-            );
+            var result = new ParsedData(new List<Employee>(), new List<SalaryTransaction>());
 
             var transactions = _input.Split(new char[] { ';' });
 
@@ -34,34 +30,45 @@ namespace SalaryPaymentReport
             {
                 var fields = transaction.Split();
 
-                uint employeeId;
-                if (uint.TryParse(fields[0], out employeeId) == false) continue;
-
-                string firstName = fields[1];
-
-                string lastName = fields[2];
-
-                decimal amount;
-                if (decimal.TryParse(fields[3], out amount) == false) continue;
-
-                DateTime date;
-                if (DateTime.TryParse(fields[4], out date) == false) continue;
-
                 try
                 {
+                    uint employeeId;
+                    if (uint.TryParse(fields[0], out employeeId) == false)
+                    {
+                        throw new FormatException("Unable to parse employee id");
+                    }
+
+                    string firstName = fields[1];
+
+                    string lastName = fields[2];
+
+                    decimal amount;
+                    if (decimal.TryParse(fields[3], out amount) == false)
+                    {
+                        throw new FormatException("Unable to parse amount");
+                    }
+
+                    DateTime date;
+                    if (DateTime.TryParse(fields[4], out date) == false)
+                    {
+                        throw new FormatException("Unable to parse date");
+                    };
+
                     if (!employees.ContainsKey(employeeId))
                     {
                         result.Item1.Add(new Employee(new EmployeeValidator(), employeeId, firstName, lastName));
-                    } else if (employees[employeeId] == firstName+lastName)
+                        employees[employeeId] = firstName + " " + lastName;
+                    }
+                    else if (employees[employeeId] != firstName + " " + lastName)
                     {
-
+                        throw new ArgumentException("Employee id duplicate");
                     }
 
                     result.Item2.Add(new SalaryTransaction(new SalaryTransactionValidator(new EmployeeValidator()), amount, date, employeeId));
                 }
                 catch (Exception e)
                 {
-                    Log(e.Message);
+                    Log(e.StackTrace);
                 }
             }
 
@@ -72,7 +79,7 @@ namespace SalaryPaymentReport
         {
             if (_logger != null)
             {
-                _logger.Log();
+                _logger.Log(message);
             }
         }
     }

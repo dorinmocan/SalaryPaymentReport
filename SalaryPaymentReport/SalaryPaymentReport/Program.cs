@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace SalaryPaymentReport
 {
@@ -20,7 +21,8 @@ namespace SalaryPaymentReport
         {
             InputType inputType = GetInputType(args);
             string input = GetInput(inputType, args);
-            var data = ParseInput(new InputParser<Tuple<IEnumerable<Employee>, IEnumerable<SalaryTransaction>>>(input));
+            string logFilePath = ConfigurationManager.AppSettings["logFilePath"];
+            ParsedData parsedData = ParseInput(new InputParser<ParsedData>(input, new Logger(logFilePath)));
 
             Console.ReadLine();
         }
