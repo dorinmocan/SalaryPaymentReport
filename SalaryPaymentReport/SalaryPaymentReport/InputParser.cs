@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class InputParser<T> : IInputParsable<ParsedData>
+    class InputParser : IInputParsable
     {
         private readonly string _input;
         private readonly ILogger _logger;

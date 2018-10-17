@@ -10,7 +10,6 @@ namespace SalaryPaymentReport
     {
         public ParsedData(List<Employee> item1, List<SalaryTransaction> item2) : base(item1, item2)
         {
-            
         }
     }
 }

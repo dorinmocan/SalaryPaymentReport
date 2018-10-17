@@ -22,8 +22,8 @@ namespace SalaryPaymentReport
             InputType inputType = GetInputType(args);
             string input = GetInput(inputType, args);
             string logFilePath = ConfigurationManager.AppSettings["logFilePath"];
-            ParsedData parsedData = ParseInput(new InputParser<ParsedData>(input, new Logger(logFilePath)));
-
+            ParsedData parsedData = ParseInput(new InputParser(input, new Logger(logFilePath)));
+            string reportData = GenerateReport(new ReportGenerator(parsedData));
             Console.ReadLine();
         }
 
@@ -79,9 +79,14 @@ namespace SalaryPaymentReport
             return args[1].Trim(new char[] { '"' });
         }
 
-        private static T ParseInput<T>(IInputParsable<T> inputParser)
+        private static ParsedData ParseInput(IInputParsable inputParser)
         {
             return inputParser.Parse();
+        }
+
+        private static string GenerateReport(IReportGeneratable reportGenerator)
+        {
+            return reportGenerator.GenerateReport();
         }
     }
 }

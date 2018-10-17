@@ -2,8 +2,8 @@
 
 namespace SalaryPaymentReport
 {
-    internal interface IInputParsable<out T>
+    internal interface IInputParsable
     {
-        T Parse();
+        ParsedData Parse();
     }
 }
