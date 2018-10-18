@@ -5,11 +5,11 @@ using System.Text;
 
 namespace SalaryPaymentReport
 {
-    internal class SalaryPaymentReportGenerator : IReportGeneratable
+    internal class ReportGenerator : IReportGeneratable
     {
-        private readonly SalaryPaymentReportParsedData _parsedData;
+        private readonly ParsedData _parsedData;
 
-        public SalaryPaymentReportGenerator(SalaryPaymentReportParsedData parsedData)
+        public ReportGenerator(ParsedData parsedData)
         {
             _parsedData = parsedData ?? throw new ArgumentException("Invalid value for parameter " + nameof(parsedData));
         }

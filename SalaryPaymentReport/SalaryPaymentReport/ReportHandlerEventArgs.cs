@@ -2,11 +2,11 @@
 
 namespace SalaryPaymentReport
 {
-    public class SalaryPaymentReportHandlerEventArgs : EventArgs
+    public class ReportHandlerEventArgs : EventArgs
     {
         public string Report { get; set; }
 
-        public SalaryPaymentReportHandlerEventArgs(string report)
+        public ReportHandlerEventArgs(string report)
         {
             Report = report;
         }

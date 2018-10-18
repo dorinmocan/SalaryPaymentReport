@@ -2,15 +2,22 @@
 
 namespace SalaryPaymentReport
 {
-    class ReportHandler<T>
+    internal class ReportHandler : Handler<ReportHandlerEventArgs>
     {
-        public virtual event EventHandler<T> ReportHandled;
+        private readonly string _report;
 
-        public virtual void HandleReport()
+        public override event EventHandler<ReportHandlerEventArgs> Handled;
+
+        public ReportHandler(string report)
         {
-            if (ReportHandled != null)
+            _report = report ?? throw new ArgumentException("Invalid value for parameter " + nameof(report));
+        }
+
+        public override void Handle()
+        {
+            if (Handled != null)
             {
-                ReportHandled(this, default(T));
+                Handled(this, new ReportHandlerEventArgs(_report));
             }
         }
     }

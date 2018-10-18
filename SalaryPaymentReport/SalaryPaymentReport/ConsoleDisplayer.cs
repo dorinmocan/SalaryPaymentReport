@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    internal class SalaryPaymentReportConsoleDisplayer
+    internal class ConsoleDisplayer
     {
-        public void DisplayOnConsole(object obj, SalaryPaymentReportHandlerEventArgs args)
+        public void Display(object sender, ReportHandlerEventArgs args)
         {
             Console.WriteLine(args.Report);
         }

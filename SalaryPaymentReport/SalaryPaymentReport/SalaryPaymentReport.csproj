@@ -50,13 +50,21 @@
     <Compile Include="IConsoleReadable.cs" />
     <Compile Include="IEmployeeValidatable.cs" />
     <Compile Include="IFileReadable.cs" />
-    <Compile Include="IInputParsable.cs" />
+    <Compile Include="IInputParseable.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="FileWriter.cs" />
     <Compile Include="InputParser.cs" />
+    <Compile Include="IReportGeneratable.cs" />
+    <Compile Include="Handler.cs" />
     <Compile Include="ISalaryTransactionValidatable.cs" />
+    <Compile Include="ConsoleDisplayer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="ParsedData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportGenerator.cs" />
+    <Compile Include="ReportHandler.cs" />
+    <Compile Include="ReportHandlerEventArgs.cs" />
     <Compile Include="SalaryTransaction.cs" />
     <Compile Include="SalaryTransactionValidator.cs" />
   </ItemGroup>

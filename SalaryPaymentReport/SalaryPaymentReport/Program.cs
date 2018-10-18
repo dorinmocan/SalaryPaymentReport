@@ -25,14 +25,18 @@ namespace SalaryPaymentReport
             string input = GetInput(inputType, args);
 
             string logFilePath = ConfigurationManager.AppSettings["logFilePath"];
-            SalaryPaymentReportParsedData parsedData = ParseInput(new SalaryPaymentReportInputParser(input, new SalaryPaymentReportLogger(logFilePath)));
+            ParsedData parsedData = ParseInput(new InputParser(input, new Logger(logFilePath)));
 
-            string report = GenerateReport(new SalaryPaymentReportGenerator(parsedData));
+            string report = GenerateReport(new ReportGenerator(parsedData));
 
-            EventHandler<SalaryPaymentReportHandlerEventArgs> Listeners = null;
-            Listeners += new SalaryPaymentReportConsoleDisplayer().DisplayOnConsole;
-            HandleReport(new SalaryPaymentReportHandler(report), Listeners);
+            EventHandler<ReportHandlerEventArgs> listeners = null;
+            listeners += new ConsoleDisplayer().Display;
+            string outputFilePath = ConfigurationManager.AppSettings["outputFilePath"];
+            listeners += new FileWriter(outputFilePath).Write;
 
+            HandleReport(new ReportHandler(report), listeners);
+
+            Console.WriteLine("Press any key to exit the program...");
             Console.ReadLine();
         }
 
@@ -101,14 +105,14 @@ namespace SalaryPaymentReport
             return reportGenerator.GenerateReport();
         }
 
-        private static void HandleReport<T>(ReportHandler<T> reportHandler, params EventHandler<T>[] listeners)
+        private static void HandleReport<T>(Handler<T> reportHandler, params EventHandler<T>[] listeners)
         {
             foreach (var listener in listeners)
             {
-                reportHandler.ReportHandled += listener;
+                reportHandler.Handled += listener;
             }
 
-            reportHandler.HandleReport();
+            reportHandler.Handle();
         }
     }
 }
