@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Reflection;
 
 namespace SalaryPaymentReport
 {
@@ -20,15 +21,29 @@ namespace SalaryPaymentReport
         static void Main(string[] args)
         {
             InputType inputType = GetInputType(args);
+
             string input = GetInput(inputType, args);
+
             string logFilePath = ConfigurationManager.AppSettings["logFilePath"];
-            ParsedData parsedData = ParseInput(new InputParser(input, new Logger(logFilePath)));
-            string reportData = GenerateReport(new ReportGenerator(parsedData));
+            SalaryPaymentReportParsedData parsedData = ParseInput(new SalaryPaymentReportInputParser(input, new SalaryPaymentReportLogger(logFilePath)));
+
+            string report = GenerateReport(new SalaryPaymentReportGenerator(parsedData));
+
+            EventHandler<SalaryPaymentReportHandlerEventArgs> Listeners = null;
+            Listeners += new SalaryPaymentReportConsoleDisplayer().DisplayOnConsole;
+            HandleReport(new SalaryPaymentReportHandler(report), Listeners);
+
             Console.ReadLine();
         }
 
         private static InputType GetInputType(string[] args)
         {
+            
+            if (args.Length == 0)
+            {
+               return InputType.Console;
+            }
+
             switch (args[0])
             {
                 case "F":
@@ -36,9 +51,6 @@ namespace SalaryPaymentReport
 
                 case "I":
                     return InputType.Args;
-
-                case "":
-                    return InputType.Console;
 
                 default:
                     throw new ArgumentException("Invalid console arguments");
@@ -79,7 +91,7 @@ namespace SalaryPaymentReport
             return args[1].Trim(new char[] { '"' });
         }
 
-        private static ParsedData ParseInput(IInputParsable inputParser)
+        private static T ParseInput<T>(IInputParseable<T> inputParser)
         {
             return inputParser.Parse();
         }
@@ -87,6 +99,16 @@ namespace SalaryPaymentReport
         private static string GenerateReport(IReportGeneratable reportGenerator)
         {
             return reportGenerator.GenerateReport();
+        }
+
+        private static void HandleReport<T>(ReportHandler<T> reportHandler, params EventHandler<T>[] listeners)
+        {
+            foreach (var listener in listeners)
+            {
+                reportHandler.ReportHandled += listener;
+            }
+
+            reportHandler.HandleReport();
         }
     }
 }

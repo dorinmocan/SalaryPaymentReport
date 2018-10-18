@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class InputParser : IInputParsable
+    class SalaryPaymentReportInputParser : IInputParseable<SalaryPaymentReportParsedData>
     {
         private readonly string _input;
         private readonly ILogger _logger;
 
-        public InputParser(string input, ILogger logger)
+        public SalaryPaymentReportInputParser(string input, ILogger logger)
         {
             _input = input ?? throw new ArgumentException("Invalid value for parameter " + nameof(input));
             _logger = logger;
         }
 
-        public ParsedData Parse()
+        public SalaryPaymentReportParsedData Parse()
         {
             var employees = new Dictionary<uint, string>();
 
-            var result = new ParsedData(new List<Employee>(), new List<SalaryTransaction>());
+            var result = new SalaryPaymentReportParsedData(new List<Employee>(), new List<SalaryTransaction>());
 
             var transactions = _input.Split(new char[] { ';' });
 

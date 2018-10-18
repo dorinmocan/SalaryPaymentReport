@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class Logger : ILogger
+    class SalaryPaymentReportLogger : ILogger
     {
         private readonly string _filePath;
 
-        public Logger(string filePath)
+        public SalaryPaymentReportLogger(string filePath)
         {
             _filePath = filePath ?? throw new ArgumentException("Invalid value for parameter " + nameof(filePath));
         }
