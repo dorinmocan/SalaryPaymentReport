@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class InputParser : IInputParseable<ParsedData>
+    internal class InputParser : IInputParseable<ParsedData>
     {
         private readonly string _input;
         private readonly ILogger _logger;
@@ -48,11 +49,7 @@ namespace SalaryPaymentReport
                         throw new FormatException("Unable to parse amount");
                     }
 
-                    DateTime date;
-                    if (DateTime.TryParse(fields[4], out date) == false)
-                    {
-                        throw new FormatException("Unable to parse date");
-                    };
+                    DateTime date = DateTime.ParseExact(fields[4], "dd/mm/yyyy", CultureInfo.InvariantCulture);
 
                     if (!employees.ContainsKey(employeeId))
                     {
@@ -68,7 +65,12 @@ namespace SalaryPaymentReport
                 }
                 catch (Exception e)
                 {
-                    Log(e.StackTrace);
+                    Log(e.Message
+                        + Environment.NewLine
+                        + e.StackTrace
+                        + Environment.NewLine
+                        + new string('-', 30)
+                        + Environment.NewLine);
                 }
             }
 
@@ -77,10 +79,7 @@ namespace SalaryPaymentReport
 
         private void Log(string message)
         {
-            if (_logger != null)
-            {
-                _logger.Log(message);
-            }
+            _logger?.Log(message);
         }
     }
 }

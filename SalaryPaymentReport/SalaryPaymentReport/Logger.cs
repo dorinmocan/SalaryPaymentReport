@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SalaryPaymentReport
 {
-    class Logger : ILogger
+    internal class Logger : ILogger
     {
         private readonly string _filePath;
 
@@ -17,7 +13,7 @@ namespace SalaryPaymentReport
 
         public void Log(string logMessage)
         {
-            System.IO.File.WriteAllText(_filePath, logMessage);
+            System.IO.File.AppendAllText(_filePath, logMessage);
         }
     }
 }

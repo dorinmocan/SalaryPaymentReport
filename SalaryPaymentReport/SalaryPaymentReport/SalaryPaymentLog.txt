@@ -1,0 +1,8 @@
+Unable to parse employee id
+   at SalaryPaymentReport.InputParser.Parse() in C:\GitProjects\SalaryPaymentReport\SalaryPaymentReport\SalaryPaymentReport\InputParser.cs:line 39
+------------------------------
+String was not recognized as a valid DateTime.
+   at System.DateTimeParse.ParseExact(String s, String format, DateTimeFormatInfo dtfi, DateTimeStyles style)
+   at System.DateTime.ParseExact(String s, String format, IFormatProvider provider)
+   at SalaryPaymentReport.InputParser.Parse() in C:\GitProjects\SalaryPaymentReport\SalaryPaymentReport\SalaryPaymentReport\InputParser.cs:line 52
+------------------------------
